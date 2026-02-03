@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HW2 Echo Form</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; }
+    label { display:block; margin-top: 12px; font-weight: 600; }
+    select, input, textarea, button { width: 100%; max-width: 700px; padding: 8px; margin-top: 6px; }
+    .row { max-width: 800px; }
+    .note { background: #f7f7f7; padding: 12px; border-left: 4px solid #ccc; margin-top: 16px; }
+    code { background:#f4f4f4; padding: 2px 6px; }
+  </style>
+</head>
+<body>
+  <h1>HW2 Echo Form</h1>
+
+  <noscript>
+    <div class="note">
+      <b>JavaScript is OFF.</b><br/>
+      This form will submit a simple <code>GET</code> request to the Python echo endpoint using query parameters.
+      For full method/encoding switching, enable JavaScript.
+    </div>
+  </noscript>
+
+  <form id="echoForm" method="GET" action="/hw2/cgi-bin/echo-python.py">
+    <div class="row">
+      <label for="lang">Language endpoint</label>
+      <select id="lang" name="lang">
+        <option value="python" selected>Python</option>
+        <option value="php">PHP</option>
+        <option value="node">Node.js</option>
+      </select>
+
+      <label for="method">HTTP Method</label>
+      <select id="method" name="method">
+        <option value="GET" selected>GET</option>
+        <option value="POST">POST</option>
+        <option value="PUT">PUT</option>
+        <option value="DELETE">DELETE</option>
+      </select>
+
+      <label for="encoding">Encoding (for non-GET)</label>
+      <select id="encoding" name="encoding">
+        <option value="application/x-www-form-urlencoded" selected>application/x-www-form-urlencoded</option>
+        <option value="application/json">application/json</option>
+      </select>
+
+      <label for="name">name</label>
+      <input id="name" name="name" value="Austin" />
+
+      <label for="msg">msg</label>
+      <input id="msg" name="msg" value="hello" />
+
+      <label for="extra">extra</label>
+      <textarea id="extra" name="extra" rows="3">some extra text</textarea>
+
+      <button type="submit" style="margin-top:16px;">Submit</button>
+    </div>
+  </form>
+
+<script>
+(function(){
+  const form = document.getElementById('echoForm');
+  const langSel = document.getElementById('lang');
+  const methodSel = document.getElementById('method');
+  const encSel = document.getElementById('encoding');
+
+  function endpointForLang(lang) {
+    if (lang === 'python') return '/hw2/cgi-bin/echo-python.py';
+    if (lang === 'php') return '/hw2/cgi-bin/echo-php.php';
+    if (lang === 'node') return '/hw2/cgi-bin/echo-node.js';
+    return '/hw2/cgi-bin/echo-python.py';
+  }
+
+  function buildPayload() {
+    const fd = new FormData(form);
+    const obj = {};
+    for (const [k,v] of fd.entries()) obj[k] = v;
+    return obj;
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    const lang = langSel.value;
+    const method = methodSel.value;
+    const enc = encSel.value;
+    const url = endpointForLang(lang);
+
+    if (method === 'GET') {
+      const params = new URLSearchParams(new FormData(form));
+      window.location.href = url + "?" + params.toString();
+      return;
+    }
+
+    const data = buildPayload();
+    let body = null;
+    const headers = {};
+
+    if (enc === 'application/json') {
+      headers['Content-Type'] = 'application/json';
+      body = JSON.stringify(data);
+    } else {
+      headers['Content-Type'] = 'application/x-www-form-urlencoded';
+      const params = new URLSearchParams();
+      for (const k in data) params.append(k, data[k]);
+      body = params.toString();
+    }
+
+    const resp = await fetch(url, {
+      method,
+      headers,
+      body,
+      credentials: 'include'
+    });
+
+    const text = await resp.text();
+    document.open();
+    document.write(text);
+    document.close();
+  }
+
+  form.addEventListener('submit', handleSubmit);
+
+  function syncAction() {
+    form.action = endpointForLang(langSel.value);
+    form.method = (methodSel.value === 'GET') ? 'GET' : 'POST'; // browser forms only support GET/POST
+  }
+  langSel.addEventListener('change', syncAction);
+  methodSel.addEventListener('change', syncAction);
+  syncAction();
+})();
+</script>
+
+</body>
+</html>
