@@ -1,4 +1,6 @@
-# CSE 135 — HW1: Client Side Basics, Site and Server Configuration
+# CSE 135
+
+# HW1: Client Side Basics, Site and Server Configuration
 
 ## Team
 - **Member 1:** Austin Choi
@@ -81,4 +83,59 @@ Apache normally controls its own Server header, and it is intentionally hard to 
 To reliably set a custom Server header, I configured Nginx as the public-facing server and used it as a reverse proxy in front of Apache.
 
 
+# HW2 Main Page (Required Links)
+- **Site:** https://austinchoi-135.site
+- Under Homework 2 on the homepage, there are links to:
+  - All 15 CGI demo programs (3 languages × 5 endpoints)
+  - The instructor-provided Perl CGI demo proof page
 
+## HW2 File Locations
+
+All Homework 2 work lives under the hw2/ folder.
+
+- **My implemented CGI demos:**
+  - Location: `hw2/cgi-bin/`
+  - These contain the required endpoints (`hello-html-*`, `hello-json-*`, `environment-*`, `echo-*`, `state-*`) for the 3 languages I chose.
+
+- **Instructor-provided Perl CGI demo code:**
+  - Location: `hw2/perl/cgi-bin/`
+  - These are the sample Perl programs downloaded from the course site and deployed to my server for Part 1.
+
+- **Echo form page (required UI):**
+  - Location: `hw2/echo.html`
+
+
+## CGI Demos Implemented (3 languages)
+I implemented the required CGI endpoints in Python, PHP, and Node.js:
+
+Each language includes:
+- `hello-html`
+- `hello-json`
+- `environment`
+- `echo`
+- `state`
+
+## Instructor Perl CGI Demo
+I also deployed the instructor-provided Perl CGI sample code and verified it runs on my domain.
+- Link: `https://austinchoi-135.site/hw2/cgi-bin/perl-hello-html-world.pl`
+
+## Third-Party Analytics
+
+### Approach 1 — Google Analytics
+- Google Analytics is installed on the homepage in index.html
+
+### Approach 2 — LogRocket
+- LogRocket is installed and verified, also in index.html
+
+### Approach 3 — Free Choice: Microsoft Clarity
+For the free choice analytics requirement, I decided to try Microsoft Clarity because it sits in an interesting middle ground between traditional aggregated analytics like Google Analytics and full session-replay tools like LogRocket. I wanted something that could give me more of a behavior-like insight with things like heatmaps, scroll depth, click patterns, and recordings without requiring a heavy set of compelxity or a paid plan just to see meaningful results.
+
+When I started evaluating options, I first looked at privacy-focused, lightweight tools so things in the more simple pageview dashboard category. Those were appealing because they’re easy to set up and avoid tracking baggage, but they felt too similar to Google Analytics so they would have mostly repeated the same kind of repeated metrics I already had. I also considered replay style tools that are closer to LogRocket, but many of them either require payment to unlock key features or overlap too much with what LogRocket already demonstrates.
+
+Clarity stood out because:
+- The install is straightforward (single script tag)
+- It provides heatmaps + session recordings that feel different from GA’s aggregated reporting
+
+Implementation wise, I added the Clarity tracking script to my homepage and verified in DevTools that requests to Clarity were being sent during navigation and interaction. In other words, from the site’s point of view the integration is active and transmitting data.
+
+One limitation I ran into is that Clarity’s web dashboard did not reliably move from the “Getting Started” state to showing recordings/heatmaps during my testing window, even after generating traffic and confirming network calls. This made it harder to immediately validate the reporting UI compared to GA and LogRocket. Despite that, I still chose Clarity because it represents a genuinely different analytics category than the other two approaches, and the client-side instrumentation was lightweight and easy to integrate.
