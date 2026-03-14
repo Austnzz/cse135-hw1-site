@@ -25,7 +25,7 @@ https://reporting.austinchoi-135.site
 ## Repository
 
 Repo link:
-[replace with your repository link]
+https://github.com/Austnzz/cse135-hw1-site
 
 Note: most of the live work for this project was done directly on the server, so the deployed version is the main source of truth for the final state of the project.
 
@@ -124,7 +124,7 @@ Examples:
 - KPI summary cards
 - recent session summaries for behavior reports
 
-The recent session summary section was added as a more unique behavioral analytics feature. It is not full replay, but it gives a compact session-level summary without the weight and complexity of true session playback.
+The recent session summary section was added as a more unique behavioral analytics feature. It is not full replay, but it does give a compact session-level summary without the weight and complexity of true session playback.
 
 ### Export System
 
@@ -137,8 +137,6 @@ Export flow:
 - file is saved under storage/exports
 - file becomes available through a download route
 
-This export system is server-side and on-demand, which keeps the normal browsing experience lightweight.
-
 ### Administrative View
 
 The platform includes a super-admin-only user management page that displays:
@@ -148,8 +146,6 @@ The platform includes a super-admin-only user management page that displays:
 - allowed sections
 - created timestamp
 - last login
-
-This page helps demonstrate working authorization and role boundaries in the app.
 
 ### Error and Contingency Handling
 
@@ -186,28 +182,23 @@ Performance decisions made in this project:
 - server-side PDF generation only when requested
 - no large JavaScript bundles before getting to the data
 
-This keeps the app much lighter than a framework-heavy solution and makes it easier for graders to use.
-
 ## AI Usage
 
 AI was used during development as a support tool for:
 - generating draft code more quickly
 - helping rewrite repetitive code structures
-- helping organize UI and page structure
-- suggesting ways to polish the design
 - helping think through routing, fallback states, and report presentation
-- speeding up documentation drafting
 
 My main observation is that AI was helpful when I already knew the direction I wanted and needed help moving faster. It was especially useful for speeding up boilerplate code, improving phrasing, reorganizing pages, and exploring multiple design options quickly.
 
-At the same time, AI was not something I could blindly trust. A few recurring problems were:
+At the same time, a few recurring problems were:
 - lack of full project context
 - suggestions that did not match the exact live codebase
 - occasional hallucinations
 - recommending changes that sounded good in theory but did not fit the real server setup
 - giving code that still needed careful review and adjustment
 
-Because of that, AI was most useful as an assistant, not as an autopilot. It saved time, but it still required manual checking, manual testing, and a good understanding of the project structure. In practice, the best results came from using AI for faster iteration while still verifying changes directly on the live project.
+Because of that, AI was most useful as an assistant. It did save me a lot of time, but it still required manual checking, manual testing, and a good understanding of the project structure. In practice, the best results came from using AI for faster iteration while still verifying changes directly on the live project.
 
 ## What I Learned
 
@@ -224,13 +215,10 @@ This project helped reinforce several ideas:
 If more time were available, I would like to improve the project further in the following ways:
 
 ### Better report authoring
-Right now the saved reports are seeded and read-focused. A natural next step would be creating, editing, and publishing reports through the UI.
-
-### Stronger analyst scoping
-The project stores allowed sections, but that model could be expanded into more detailed analyst-specific report creation and editing controls.
+Right now the saved reports are seeded and read-focused. A next step would be creating, editing, and publishing reports through the UI.
 
 ### Richer behavioral analytics
-The recent session summaries were a good step, but future work could include:
+The recent session summaries were a good step, but I think future works could include:
 - more path-flow summaries
 - transition analysis between pages
 - better funnel-style views
@@ -247,7 +235,3 @@ The export system works, but the PDF layout could be refined further with strong
 
 ### Repository and deployment workflow
 More of the project could be moved into a cleaner repo-driven deployment workflow rather than relying so heavily on live-server editing.
-
-## Final Notes
-
-This project was built to satisfy the core HW5 requirements while still staying lightweight and practical. The overall goal was not just to technically include the required features, but to make the reporting platform feel more organized, more intentional, and more useful as a real reporting interface.
