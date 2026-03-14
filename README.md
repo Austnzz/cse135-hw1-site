@@ -8,6 +8,26 @@ The system collects analytics data from a test site, stores it in PostgreSQL, ex
 
 The project is designed to stay lightweight and practical. It uses server-rendered PHP, small amounts of JavaScript, and a limited number of dependencies so that the application remains responsive and easy to grade.
 
+## Important Access Note
+
+The root of the reporting domain, `https://reporting.austinchoi-135.site`, does not serve the main HW5 dashboard directly.
+
+For grading and normal use of the final project, please start from one of these application routes instead:
+
+- `https://reporting.austinchoi-135.site/login`
+- `https://reporting.austinchoi-135.site/reports`
+- `https://reporting.austinchoi-135.site/saved-reports`
+
+The reporting platform is routed through the application entry points above. Visiting only the bare domain root may show an older placeholder page and does not reflect the actual final HW5 reporting experience.
+
+## Important Repository Note
+
+The main HW5 and final-project implementation is located in the `reporting.austinchoi-135.site/` directory in this repository.
+
+This repository originally started from earlier assignment work, so the repo root still contains older site files and earlier project structure. The final reporting platform work for HW5 is concentrated in the `reporting.austinchoi-135.site/` folder.
+
+For grading, the deployed reporting platform and the source code in `reporting.austinchoi-135.site/` are the most relevant parts of the final project.
+
 ## Deployed Sites
 
 Main site:
@@ -21,7 +41,7 @@ https://collector.austinchoi-135.site
 
 Reporting platform:
 https://reporting.austinchoi-135.site
-https://reporting.austinchoi-135.site/reports
+https://reporting.austinchoi-135.site/login
 
 ## Repository
 

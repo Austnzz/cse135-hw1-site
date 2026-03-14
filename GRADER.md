@@ -1,10 +1,37 @@
 # CSE 135 Grader Guide
 
+## Important Access Note
+
+Please do not judge the final HW5 project by visiting only the bare root of the reporting domain.
+
+The root URL
+
+- `https://reporting.austinchoi-135.site`
+
+may display an older placeholder page and is not the correct starting point for the final reporting platform.
+
+For grading, please begin from one of these routes instead:
+
+- `https://reporting.austinchoi-135.site/login`
+- `https://reporting.austinchoi-135.site/reports`
+- `https://reporting.austinchoi-135.site/saved-reports`
+
+These routes load the actual HW5 analytics reporting application.
+
+## Important Repository Note
+
+The final HW5 reporting platform code is located in the `reporting.austinchoi-135.site/` folder in the repository.
+
+The repo root still contains earlier files from previous assignments, but the main final-project implementation for HW5 is the reporting platform inside `reporting.austinchoi-135.site/`.
+
+For grading the final project, the deployed reporting platform routes listed above and the code in `reporting.austinchoi-135.site/` are the most relevant parts.
+
+
 ## Site Access
 
 Reporting platform:
 https://reporting.austinchoi-135.site
-https://reporting.austinchoi-135.site/reports
+https://reporting.austinchoi-135.site/login
 
 Because the reporting host is protected by Basic Auth, you will first need the site-level credentials below before using the in-app login system.
 
