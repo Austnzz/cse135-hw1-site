@@ -1,0 +1,12 @@
+/vendor/
+/storage/exports/*
+/.vscode/
+analyst-cookies.txt
+cookies.txt
+public-cookies.txt
+superadmin-cookies.txt
+viewer-cookies.txt
+
+404.html
+index.html
+php-test.php

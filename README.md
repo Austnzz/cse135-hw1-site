@@ -1,141 +1,253 @@
-# CSE 135
+# CSE 135 Analytics Reporting Platform
 
-# HW1: Client Side Basics, Site and Server Configuration
+## Project Overview
 
-## Team
-- **Member 1:** Austin Choi
+This project is a lightweight analytics reporting platform built for CSE 135. It extends the earlier project milestones into a more complete reporting system with authentication, authorization, saved reports, data visualization, export support, and administrative access control.
 
-## Droplet / Server Info
-- **Provider:** DigitalOcean
-- **Droplet Name:** cse135-hw1
-- **Public IP:** 143.110.137.113
-- **Domain:** https://austinchoi-135.site
-- **Collector:** https://collector.austinchoi-135.site
-- **Reporting:** https://reporting.austinchoi-135.site
+The system collects analytics data from a test site, stores it in PostgreSQL, exposes reporting data through server-side logic, and presents curated reports through a role-based dashboard.
 
----
+The project is designed to stay lightweight and practical. It uses server-rendered PHP, small amounts of JavaScript, and a limited number of dependencies so that the application remains responsive and easy to grade.
 
-## Grader Access (SSH)
-ssh grader@143.110.137.113
-password: grader_password
+## Deployed Sites
 
-### Homepage + Member Pages
-- **Homepage:** https://austinchoi-135.site
-- **My member page:** https://austinchoi-135.site/members/austinchoi.html
+Main site:
+https://austinchoi-135.site
 
-### Required Site Files
-- **favicon:** https://austinchoi-135.site/favicon.ico  
-- **robots.txt:** https://austinchoi-135.site/robots.txt
+Test site:
+https://test.austinchoi-135.site
 
-### Other Required Files
-- **PHP page:** https://austinchoi-135.site/hw1/hello.php  
-- **GoAccess report:** https://austinchoi-135.site/hw1/report.htm
+Collector:
+https://collector.austinchoi-135.site
 
-## Password-Protected Area (Basic Auth)
-I enabled Apache Basic Authentication so the grader can log into the protected area.
+Reporting platform:
+https://reporting.austinchoi-135.site
 
-## Udser name and Password to Access Site
-**Username:** grader
-**password:** grader_password
+## Repository
 
-## GitHub Auto-Deploy Setup
-**Goal:** When I push to `main`, the website updates automatically on the DigitalOcean droplet.
+Repo link:
+[replace with your repository link]
 
-### Repo
-- **GitHub Repo:** https://github.com/Austnzz/cse135-hw1-site
+Note: most of the live work for this project was done directly on the server, so the deployed version is the main source of truth for the final state of the project.
 
-### How deployment works (what I set up)
-1. On the droplet, I created a bare Git repo: `/var/repo/site.git`
-2. I added a post receive hook that runs after every push to `main`
-3. The hook checks out the latest `main` branch into the Apache DocumentRoot: `/var/www/austinchoi-135.site`
+## High-Level Architecture
 
-### post-receive hook logic
-- If the pushed ref is `refs/heads/main`:
-  - `git checkout -f main` into `/var/www/austinchoi-135.site`
-  - `chown -R deploy:www-data` on the deployed files
-  - set directory perms to 755 and file perms to 644
+The project is hosted on a DigitalOcean Ubuntu droplet.
 
-## Compression
-I enabled Apache compression so the server can send smaller versions of text files (HTML/CSS/JS) to the browser.  
-This reduces download size and usually makes the page load faster.
-Modules:
-- `deflate`
-- `filter`
-- `headers`
+Public-facing stack:
+- nginx on ports 80 and 443
+- Apache behind nginx on 127.0.0.1:8080
 
-### What changed after compression
-Before compression, the browser downloaded the full raw text of the page files.  
-After compression, the server sends a compressed version instead, so:
+This setup was used so the public-facing server header could be controlled and presented as CSE135 Server.
 
-- Transferred size goes down
-- Content-Encoding: gzip appears in response headers
-- The browser automatically decompresses it, so the page still looks the same
+Major parts of the project:
+- main website and earlier homework content
+- test site that loads analytics collection code
+- collector service for logging analytics events
+- PostgreSQL database for analytics and reporting data
+- reporting platform for dashboards, saved reports, exports, and admin views
 
+## Technology Stack
 
-## Obscuring Server Identity
+Server and hosting:
+- Ubuntu 24.04
+- DigitalOcean
+- nginx
+- Apache
 
-### Goal
-Change the HTTP response header from something like:
-- `Server: CSE135 Server`
+Backend:
+- PHP
+- PostgreSQL
+- PDO for database access
 
-### What I did
-Apache normally controls its own Server header, and it is intentionally hard to fully overwrite it.
-To reliably set a custom Server header, I configured Nginx as the public-facing server and used it as a reverse proxy in front of Apache.
+Frontend:
+- HTML
+- CSS
+- small amounts of JavaScript
+- Chart.js for charts
 
+Export:
+- Dompdf for PDF generation
 
-# HW2 Main Page (Required Links)
-- **Site:** https://austinchoi-135.site
-- Under Homework 2 on the homepage, there are links to:
-  - All 15 CGI demo programs (3 languages × 5 endpoints)
-  - The instructor-provided Perl CGI demo proof page
+## Main Features
 
-## HW2 File Locations
+### Authentication and Authorization
 
-All Homework 2 work lives under the hw2/ folder.
+The reporting platform includes a working application login system backed by a users table in PostgreSQL.
 
-- **My implemented CGI demos:**
-  - Location: `hw2/cgi-bin/`
-  - These contain the required endpoints (`hello-html-*`, `hello-json-*`, `environment-*`, `echo-*`, `state-*`) for the 3 languages I chose.
+There are three role levels:
+- super admin
+- analyst
+- viewer
 
-- **Instructor-provided Perl CGI demo code:**
-  - Location: `hw2/perl/cgi-bin/`
-  - These are the sample Perl programs downloaded from the course site and deployed to my server for Part 1.
+Role behavior:
+- super admin can access all reporting pages and user management
+- analyst can access reporting pages
+- viewer can only access saved reports that are published
 
-- **Echo form page (required UI):**
-  - Location: `hw2/echo.html`
+There is also host-level Basic Auth protecting the reporting host separately from the app login.
 
+### Reporting Dashboard
 
-## CGI Demos Implemented (3 languages)
-I implemented the required CGI endpoints in Python, PHP, and Node.js:
+The reports overview page gives a summary-first dashboard view with:
+- KPI cards
+- grouped event chart
+- recent event table
+- links into saved reports
 
-Each language includes:
-- `hello-html`
-- `hello-json`
-- `environment`
-- `echo`
-- `state`
+### Saved Reports
 
-## Instructor Perl CGI Demo
-I also deployed the instructor-provided Perl CGI sample code and verified it runs on my domain.
-- Link: `https://austinchoi-135.site/hw2/cgi-bin/perl-hello-html-world.pl`
+The saved reports page acts as the viewer-facing reporting layer of the platform. Reports are presented as curated report cards rather than raw data output.
 
-## Third-Party Analytics
+Each saved report includes:
+- report summary
+- metadata
+- KPI cards
+- visualization
+- analyst commentary
+- supporting table
+- export action
 
-### Approach 1 — Google Analytics
-- Google Analytics is installed on the homepage in index.html
+Current report categories:
+- behavior
+- errors
+- performance
 
-### Approach 2 — LogRocket
-- LogRocket is installed and verified, also in index.html
+### Data Visualizations
 
-### Approach 3 — Free Choice: Microsoft Clarity
-For the free choice analytics requirement, I decided to try Microsoft Clarity because it sits in an interesting middle ground between traditional aggregated analytics like Google Analytics and full session-replay tools like LogRocket. I wanted something that could give me more of a behavior-like insight with things like heatmaps, scroll depth, click patterns, and recordings without requiring a heavy set of compelxity or a paid plan just to see meaningful results.
+The platform includes multiple chart-based and report-style visualizations.
 
-When I started evaluating options, I first looked at privacy-focused, lightweight tools so things in the more simple pageview dashboard category. Those were appealing because they’re easy to set up and avoid tracking baggage, but they felt too similar to Google Analytics so they would have mostly repeated the same kind of repeated metrics I already had. I also considered replay style tools that are closer to LogRocket, but many of them either require payment to unlock key features or overlap too much with what LogRocket already demonstrates.
+Examples:
+- grouped event counts by event type
+- error counts by page
+- performance events by page
+- behavior over time
+- KPI summary cards
+- recent session summaries for behavior reports
 
-Clarity stood out because:
-- The install is straightforward (single script tag)
-- It provides heatmaps + session recordings that feel different from GA’s aggregated reporting
+The recent session summary section was added as a more unique behavioral analytics feature. It is not full replay, but it gives a compact session-level summary without the weight and complexity of true session playback.
 
-Implementation wise, I added the Clarity tracking script to my homepage and verified in DevTools that requests to Clarity were being sent during navigation and interaction. In other words, from the site’s point of view the integration is active and transmitting data.
+### Export System
 
-One limitation I ran into is that Clarity’s web dashboard did not reliably move from the “Getting Started” state to showing recordings/heatmaps during my testing window, even after generating traffic and confirming network calls. This made it harder to immediately validate the reporting UI compared to GA and LogRocket. Despite that, I still chose Clarity because it represents a genuinely different analytics category than the other two approaches, and the client-side instrumentation was lightweight and easy to integrate.
+Saved reports can be exported as PDFs.
+
+Export flow:
+- user opens a saved report
+- user clicks export
+- server generates a PDF using Dompdf
+- file is saved under storage/exports
+- file becomes available through a download route
+
+This export system is server-side and on-demand, which keeps the normal browsing experience lightweight.
+
+### Administrative View
+
+The platform includes a super-admin-only user management page that displays:
+- username
+- display name
+- role
+- allowed sections
+- created timestamp
+- last login
+
+This page helps demonstrate working authorization and role boundaries in the app.
+
+### Error and Contingency Handling
+
+The platform includes styled fallback pages and route handling for:
+- 403 forbidden
+- 404 not found
+- missing report slugs
+- missing export files
+- export failure fallback
+- no-script notice
+- empty-state handling on major pages
+
+## Data Collection and Storage
+
+Analytics data is collected from the test site through collector.js and sent to the collector endpoint.
+
+The collector stores events in PostgreSQL. Reporting pages then query and shape this data on the server side before rendering it into the dashboard or saved report pages.
+
+Important data categories include:
+- behavior-related events
+- error events
+- performance events
+
+## Performance Considerations
+
+One of the design goals of this project was to stay reasonably performant and avoid a heavyweight frontend.
+
+Performance decisions made in this project:
+- server-rendered PHP instead of a large SPA framework
+- one shared CSS file
+- Chart.js only on pages that actually need charts
+- grouped and filtered SQL queries instead of sending raw logs to the browser
+- limited recent-event tables instead of huge unbounded tables
+- server-side PDF generation only when requested
+- no large JavaScript bundles before getting to the data
+
+This keeps the app much lighter than a framework-heavy solution and makes it easier for graders to use.
+
+## AI Usage
+
+AI was used during development as a support tool for:
+- generating draft code more quickly
+- helping rewrite repetitive code structures
+- helping organize UI and page structure
+- suggesting ways to polish the design
+- helping think through routing, fallback states, and report presentation
+- speeding up documentation drafting
+
+My main observation is that AI was helpful when I already knew the direction I wanted and needed help moving faster. It was especially useful for speeding up boilerplate code, improving phrasing, reorganizing pages, and exploring multiple design options quickly.
+
+At the same time, AI was not something I could blindly trust. A few recurring problems were:
+- lack of full project context
+- suggestions that did not match the exact live codebase
+- occasional hallucinations
+- recommending changes that sounded good in theory but did not fit the real server setup
+- giving code that still needed careful review and adjustment
+
+Because of that, AI was most useful as an assistant, not as an autopilot. It saved time, but it still required manual checking, manual testing, and a good understanding of the project structure. In practice, the best results came from using AI for faster iteration while still verifying changes directly on the live project.
+
+## What I Learned
+
+This project helped reinforce several ideas:
+- server-side shaping is often cleaner than pushing raw data to the browser
+- small and intentional dashboards are better than overly crowded ones
+- access control should be visible in both backend logic and the UI
+- error handling and fallback states matter more once an app starts to feel real
+- export and reporting features are more useful when they are integrated into a clear workflow
+- AI can help with speed, but context and validation still matter a lot
+
+## Roadmap and Future Improvements
+
+If more time were available, I would like to improve the project further in the following ways:
+
+### Better report authoring
+Right now the saved reports are seeded and read-focused. A natural next step would be creating, editing, and publishing reports through the UI.
+
+### Stronger analyst scoping
+The project stores allowed sections, but that model could be expanded into more detailed analyst-specific report creation and editing controls.
+
+### Richer behavioral analytics
+The recent session summaries were a good step, but future work could include:
+- more path-flow summaries
+- transition analysis between pages
+- better funnel-style views
+- more meaningful segmentation of behavior events
+
+### More refined performance analytics
+The current performance reporting is useful, but it could be extended with:
+- clearer timing breakdowns
+- more page-level comparison views
+- more trend summaries over time
+
+### Better export presentation
+The export system works, but the PDF layout could be refined further with stronger report-specific formatting.
+
+### Repository and deployment workflow
+More of the project could be moved into a cleaner repo-driven deployment workflow rather than relying so heavily on live-server editing.
+
+## Final Notes
+
+This project was built to satisfy the core HW5 requirements while still staying lightweight and practical. The overall goal was not just to technically include the required features, but to make the reporting platform feel more organized, more intentional, and more useful as a real reporting interface.
