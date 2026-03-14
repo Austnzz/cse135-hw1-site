@@ -21,6 +21,7 @@ https://collector.austinchoi-135.site
 
 Reporting platform:
 https://reporting.austinchoi-135.site
+https://reporting.austinchoi-135.site/reports
 
 ## Repository
 

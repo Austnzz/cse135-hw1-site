@@ -4,6 +4,7 @@
 
 Reporting platform:
 https://reporting.austinchoi-135.site
+https://reporting.austinchoi-135.site/reports
 
 Because the reporting host is protected by Basic Auth, you will first need the site-level credentials below before using the in-app login system.
 
